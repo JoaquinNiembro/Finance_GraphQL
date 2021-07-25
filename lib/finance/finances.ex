@@ -17,8 +17,41 @@ defmodule Finance.Finances do
       [%Bill{}, ...]
 
   """
-  def list_bills do
-    Repo.all(Bill)
+  def list_bills(args) do
+    args
+    |> Enum.reduce(
+      Bill,
+      fn
+        {:order, order}, query ->
+          query
+          |> order_by({^order, :name})
+
+        {:filter, filter}, query ->
+          query
+          |> filter_bills_by(filter)
+      end
+    )
+    |> Repo.all()
+  end
+
+  defp filter_bills_by(query, filter) do
+    Enum.reduce(filter, query, fn
+      {:name, name}, query ->
+        from q in query, where: ilike(q.name, ^"%#{name}")
+
+      {:priced_above, price}, query ->
+        from q in query, where: q.amount >= ^price
+
+      {:priced_below, price}, query ->
+        from q in query, where: q.amount <= ^price
+
+      {:added_after, date}, query ->
+        IO.inspect(date)
+        from q in query, where: q.added_on >= ^date
+
+      {:added_before, date}, query ->
+        from q in query, where: q.added_on <= ^date
+    end)
   end
 
   @doc """

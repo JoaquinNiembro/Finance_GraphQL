@@ -5,6 +5,7 @@ defmodule Finance.Finances.Bill do
   schema "bills" do
     field :amount, :decimal
     field :name, :string
+    field :added_on, :date
 
     timestamps()
   end

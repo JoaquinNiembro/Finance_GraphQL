@@ -1,8 +1,8 @@
 defmodule FinanceWeb.Resolvers.BillsResolver do
   alias Finance.Finances
 
-  def resolve_get_list_of_bills(_object, _args, _context) do
-    {:ok, Finances.list_bills()}
+  def resolve_get_list_of_bills(_object, args, _context) do
+    {:ok, Finances.list_bills(args)}
   end
 
   def create_bill(_, %{input: params}, _) do
