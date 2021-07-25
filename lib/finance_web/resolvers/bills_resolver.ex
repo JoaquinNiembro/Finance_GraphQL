@@ -6,7 +6,6 @@ defmodule FinanceWeb.Resolvers.BillsResolver do
   end
 
   def create_bill(_, %{input: params}, _) do
-    IO.inspect params
     case Finances.create_bill(params) do
       {:error, changeset} ->
         {:ok, %{errors: transform_errors(changeset)}}

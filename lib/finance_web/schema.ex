@@ -5,8 +5,7 @@ defmodule FinanceWeb.Schema do
   scalar :decimal do
     parse(fn
       %{value: value}, _ ->
-        IO.inspect(value)
-        Decimal.from_float(value)
+        {:ok, is_decimal_type(value)}
 
       _, _ ->
         :error
@@ -15,15 +14,18 @@ defmodule FinanceWeb.Schema do
     serialize(&to_string/1)
   end
 
+  defp is_decimal_type(value) do
+    case is_integer(value) do
+      true -> value
+      false -> Decimal.from_float(value)
+    end
+  end
+
   query do
     import_fields(:bill_queries)
   end
 
   mutation do
-    field :create_bill, :bill do
-      arg(:input, non_null(:create_bill_input))
-
-      resolve(&FinanceWeb.Resolvers.BillsResolver.create_bill/3)
-    end
+    import_fields(:bills_mutations)
   end
 end

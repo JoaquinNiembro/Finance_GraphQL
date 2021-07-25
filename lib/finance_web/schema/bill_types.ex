@@ -27,4 +27,12 @@ defmodule FinanceWeb.Schema.BillTypes do
       resolve(&BillsResolver.resolve_get_list_of_bills/3)
     end
   end
+
+  object :bills_mutations do
+    field :create_bill, :bill do
+      arg(:input, non_null(:create_bill_input))
+
+      resolve(&FinanceWeb.Resolvers.BillsResolver.create_bill/3)
+    end
+  end
 end
