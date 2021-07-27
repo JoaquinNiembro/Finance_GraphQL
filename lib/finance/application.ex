@@ -14,9 +14,11 @@ defmodule Finance.Application do
       # Start the PubSub system
       {Phoenix.PubSub, name: Finance.PubSub},
       # Start the Endpoint (http/https)
-      FinanceWeb.Endpoint
+      FinanceWeb.Endpoint,
       # Start a worker by calling: Finance.Worker.start_link(arg)
       # {Finance.Worker, arg}
+      # GraphQL Subscriptions
+      {Absinthe.Subscription, [FinanceWeb.Endpoint]}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

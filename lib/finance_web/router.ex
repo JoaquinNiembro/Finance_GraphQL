@@ -8,8 +8,12 @@ defmodule FinanceWeb.Router do
   scope "/api" do
     pipe_through :api
 
-    get "/", Absinthe.Plug.GraphiQL, schema: FinanceWeb.Schema, interface: :playground
-    post "/", Absinthe.Plug, schema: FinanceWeb.Schema
+    # get "/", Absinthe.Plug.GraphiQL, schema: FinanceWeb.Schema, interface: :playground, socket: FinanceWeb.UserSocket
+    # post "/", Absinthe.Plug, schema: FinanceWeb.Schema, socket: FinanceWeb.UserSocket
+    forward "/", Absinthe.Plug.GraphiQL,
+      schema: FinanceWeb.Schema,
+      interface: :playground,
+      socket: FinanceWeb.UserSocket
   end
 
   # Enables LiveDashboard only for development

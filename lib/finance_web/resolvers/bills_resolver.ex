@@ -11,6 +11,12 @@ defmodule FinanceWeb.Resolvers.BillsResolver do
         {:ok, %{errors: transform_errors(changeset)}}
 
       {:ok, bill} ->
+        Absinthe.Subscription.publish(
+          FinanceWeb.Endpoint,
+          bill,
+          new_bill: "*"
+        )
+
         {:ok, bill}
     end
   end
@@ -18,6 +24,12 @@ defmodule FinanceWeb.Resolvers.BillsResolver do
   def delete_bill(_, %{input: params}, _) do
     case Finances.delete_bill_mutation(params.id) do
       {:ok, bill} ->
+        Absinthe.Subscription.publish(
+          FinanceWeb.Endpoint,
+          bill,
+          delete_bill: "*"
+        )
+
         {:ok, %{bill: bill, msg: "bill deleted"}}
 
       {:error, msg} ->

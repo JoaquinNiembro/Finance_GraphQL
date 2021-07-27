@@ -123,8 +123,11 @@ defmodule Finance.Finances do
 
   def delete_bill_mutation(id) do
     case get_bill!(String.to_integer(id)) do
-      %Bill{} = bill -> delete_bill_for_mutation(bill)
-      nil -> {:error, "No Bill found..."}
+      %Bill{} = bill ->
+        delete_bill_for_mutation(bill)
+
+      nil ->
+        {:error, "No Bill found..."}
     end
   end
 

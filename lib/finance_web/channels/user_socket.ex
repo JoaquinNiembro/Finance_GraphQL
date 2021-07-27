@@ -1,6 +1,6 @@
 defmodule FinanceWeb.UserSocket do
   use Phoenix.Socket
-
+  use Absinthe.Phoenix.Socket, schema: FinanceWeb.Schema
   ## Channels
   # channel "room:*", FinanceWeb.RoomChannel
 
