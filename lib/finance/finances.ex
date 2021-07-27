@@ -144,4 +144,11 @@ defmodule Finance.Finances do
   def change_bill(%Bill{} = bill, attrs \\ %{}) do
     Bill.changeset(bill, attrs)
   end
+
+  def update_mutation_handler(id, params) do
+    case get_bill!(String.to_integer(id)) do
+      %Bill{} = bill -> update_bill(bill, params)
+      nil -> {:error, "No Bill found..."}
+    end
+  end
 end

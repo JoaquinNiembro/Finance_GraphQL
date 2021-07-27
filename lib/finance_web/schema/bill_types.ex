@@ -42,6 +42,12 @@ defmodule FinanceWeb.Schema.BillTypes do
     field(:name, non_null(:string))
   end
 
+  input_object :update_bill_input do
+    field(:id, non_null(:string))
+    field(:amount, :decimal)
+    field(:name, :string)
+  end
+
   input_object :delete_bill do
     field :id, non_null(:string)
   end
@@ -59,6 +65,11 @@ defmodule FinanceWeb.Schema.BillTypes do
     field :msg, non_null(:string)
   end
 
+  object :update_mutation_payload do
+    field :bill, :bill
+    field :msg, non_null(:string)
+  end
+
   object :bills_mutations do
     field :create_bill, :bill do
       arg(:input, non_null(:create_bill_input))
@@ -70,6 +81,12 @@ defmodule FinanceWeb.Schema.BillTypes do
       arg(:input, non_null(:delete_bill))
 
       resolve(&BillsResolver.delete_bill/3)
+    end
+
+    field :update_bill, :update_mutation_payload do
+      arg(:input, non_null(:update_bill_input))
+
+      resolve(&BillsResolver.resolve_update_bill/3)
     end
   end
 end
