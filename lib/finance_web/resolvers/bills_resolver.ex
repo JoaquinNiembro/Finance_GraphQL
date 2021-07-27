@@ -1,6 +1,7 @@
 defmodule FinanceWeb.Resolvers.BillsResolver do
   alias Finance.Finances
 
+
   def resolve_get_list_of_bills(_object, args, _context) do
     {:ok, Finances.list_bills(args)}
   end
@@ -12,6 +13,25 @@ defmodule FinanceWeb.Resolvers.BillsResolver do
 
       {:ok, bill} ->
         {:ok, bill}
+    end
+  end
+
+  def delete_bill(_, %{input: params}, _) do
+    case Finances.delete_bill_mutation(params.id) do
+      {:ok, bill} ->
+        {:ok, %{bill: bill, msg: "bill deleted"}}
+
+      {:error, msg} ->
+        {:ok,
+         %{
+           bill: %{
+             id: "null",
+             amount: "null",
+             added_on: ~D[2000-01-01],
+             name: "null"
+           },
+           msg: msg
+         }}
     end
   end
 

@@ -46,7 +46,6 @@ defmodule Finance.Finances do
         from q in query, where: q.amount <= ^price
 
       {:added_after, date}, query ->
-        IO.inspect(date)
         from q in query, where: q.added_on >= ^date
 
       {:added_before, date}, query ->
@@ -68,7 +67,7 @@ defmodule Finance.Finances do
       ** (Ecto.NoResultsError)
 
   """
-  def get_bill!(id), do: Repo.get!(Bill, id)
+  def get_bill!(id), do: Repo.get(Bill, id)
 
   @doc """
   Creates a bill.
@@ -120,6 +119,17 @@ defmodule Finance.Finances do
   """
   def delete_bill(%Bill{} = bill) do
     Repo.delete(bill)
+  end
+
+  def delete_bill_mutation(id) do
+    case get_bill!(String.to_integer(id)) do
+      %Bill{} = bill -> delete_bill_for_mutation(bill)
+      nil -> {:error, "No Bill found..."}
+    end
+  end
+
+  defp delete_bill_for_mutation(%Bill{} = bill) do
+    delete_bill(bill)
   end
 
   @doc """

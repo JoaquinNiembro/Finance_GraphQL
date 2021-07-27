@@ -14,7 +14,6 @@ defmodule FinanceWeb.Schema.BillTypes do
     @desc "is completed"
     field :is_completed, :boolean do
       resolve(fn %{inserted_at: added_on}, _args, _context ->
-        IO.inspect(added_on)
         {:ok, !is_nil(added_on)}
       end)
     end
@@ -43,6 +42,10 @@ defmodule FinanceWeb.Schema.BillTypes do
     field(:name, non_null(:string))
   end
 
+  input_object :delete_bill do
+    field :id, non_null(:string)
+  end
+
   object :bill_queries do
     field :bills, list_of(:bill) do
       arg(:filter, non_null(:bill_filter))
@@ -51,11 +54,22 @@ defmodule FinanceWeb.Schema.BillTypes do
     end
   end
 
+  object :delete_mutation_payload do
+    field :bill, :bill
+    field :msg, non_null(:string)
+  end
+
   object :bills_mutations do
     field :create_bill, :bill do
       arg(:input, non_null(:create_bill_input))
 
-      resolve(&FinanceWeb.Resolvers.BillsResolver.create_bill/3)
+      resolve(&BillsResolver.create_bill/3)
+    end
+
+    field :delete_bill, :delete_mutation_payload do
+      arg(:input, non_null(:delete_bill))
+
+      resolve(&BillsResolver.delete_bill/3)
     end
   end
 end
