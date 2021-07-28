@@ -89,4 +89,46 @@ defmodule FinanceWeb.Schema.BillTypes do
       resolve(&BillsResolver.resolve_update_bill/3)
     end
   end
+
+  object :bills_subscriptions do
+    field :new_bill, :bill do
+      config(fn _args, _info ->
+        {:ok, topic: "*"}
+      end)
+
+      resolve(fn root, _, _ ->
+        IO.inspect(root)
+        {:ok, root}
+      end)
+    end
+
+    field :delete_bill, :bill do
+      config(fn _args, _info ->
+        {:ok, topic: "*"}
+      end)
+
+      resolve(fn root, _, _ ->
+        IO.inspect(root)
+        {:ok, root}
+      end)
+    end
+
+    field :update_bill, :update_mutation_payload do
+      arg(:id, non_null(:id))
+
+      config(fn args, _info ->
+        {:ok, topic: args.id}
+      end)
+
+      trigger([:update_bill],
+        topic: fn
+          %{bill: bill} ->
+            [bill.id]
+
+          _ ->
+            []
+        end
+      )
+    end
+  end
 end
