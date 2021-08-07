@@ -1,6 +1,7 @@
 defmodule FinanceWeb.Schema.BillTypes do
   use Absinthe.Schema.Notation
   alias FinanceWeb.Resolvers.BillsResolver
+  alias FinanceWeb.Schema.Middleware
 
   object :bill do
     @desc "Bill identifier"

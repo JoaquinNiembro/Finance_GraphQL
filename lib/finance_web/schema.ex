@@ -1,5 +1,8 @@
 defmodule FinanceWeb.Schema do
   use Absinthe.Schema
+  alias FinanceWeb.Resolvers
+  alias FinanceWeb.Schema.Middleware
+
   import_types(__MODULE__.{BillTypes})
 
   scalar :decimal do
@@ -42,5 +45,14 @@ defmodule FinanceWeb.Schema do
 
   subscription do
     import_fields(:bills_subscriptions)
+  end
+
+  def middleware(middleware, _field, %Absinthe.Type.Object{identifier: identifier})
+      when identifier in [:mutation] do
+    [Middleware.ChangesetErrors | middleware]
+  end
+
+  def middleware(middleware, _field, _object) do
+    middleware
   end
 end

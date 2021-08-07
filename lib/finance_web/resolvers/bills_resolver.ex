@@ -6,18 +6,14 @@ defmodule FinanceWeb.Resolvers.BillsResolver do
   end
 
   def create_bill(_, %{input: params}, _) do
-    case Finances.create_bill(params) do
-      {:error, changeset} ->
-        {:ok, %{errors: transform_errors(changeset)}}
+    with {:ok, bill} <- Finances.create_bill(params) do
+      Absinthe.Subscription.publish(
+        FinanceWeb.Endpoint,
+        bill,
+        new_bill: "*"
+      )
 
-      {:ok, bill} ->
-        Absinthe.Subscription.publish(
-          FinanceWeb.Endpoint,
-          bill,
-          new_bill: "*"
-        )
-
-        {:ok, bill}
+      {:ok, bill}
     end
   end
 
@@ -63,21 +59,5 @@ defmodule FinanceWeb.Resolvers.BillsResolver do
            msg: msg
          }}
     end
-  end
-
-  def transform_errors(changeset) do
-    changeset
-    |> Ecto.Changeset.traverse_errors(&format_error/1)
-    |> Enum.map(fn {key, value} -> %{key: key, message: value} end)
-  end
-
-  defp format_error({msg, opts}) do
-    Enum.reduce(
-      opts,
-      msg,
-      fn {key, value}, acc ->
-        String.replace(acc, "%{#{key}}", to_string(value))
-      end
-    )
   end
 end
