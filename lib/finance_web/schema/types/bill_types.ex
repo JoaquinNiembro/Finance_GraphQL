@@ -1,4 +1,4 @@
-defmodule FinanceWeb.Schema.BillTypes do
+defmodule FinanceWeb.Schema.Types.BillTypes do
   use Absinthe.Schema.Notation
   alias FinanceWeb.Resolvers.BillsResolver
   alias FinanceWeb.Schema.Middleware

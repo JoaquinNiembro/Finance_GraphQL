@@ -3,7 +3,7 @@ defmodule FinanceWeb.Schema do
   alias FinanceWeb.Resolvers
   alias FinanceWeb.Schema.Middleware
 
-  import_types(__MODULE__.{BillTypes})
+  import_types(FinanceWeb.Schema.Types.{BillTypes, AuthTypes})
 
   scalar :decimal do
     parse(fn
@@ -41,6 +41,7 @@ defmodule FinanceWeb.Schema do
 
   mutation do
     import_fields(:bills_mutations)
+    import_fields(:auth_mutations)
   end
 
   subscription do
