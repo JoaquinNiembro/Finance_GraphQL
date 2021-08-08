@@ -5,7 +5,6 @@ defmodule Finance.Accounts do
   alias Comeonin.Ecto.Password
 
   def authenticate(role, email, password) do
-    IO.puts("que pedo")
     user = Repo.get_by(User, role: to_string(role), email: email)
 
     with %{password: digest} <- user, true <- Password.valid?(password, digest) do
@@ -13,5 +12,9 @@ defmodule Finance.Accounts do
     else
       _ -> :error
     end
+  end
+
+  def lookup(role, id) do
+    Repo.get_by(User, role: to_string(role), id: id)
   end
 end

@@ -5,15 +5,21 @@ defmodule FinanceWeb.Resolvers.BillsResolver do
     {:ok, Finances.list_bills(args)}
   end
 
-  def create_bill(_, %{input: params}, _) do
-    with {:ok, bill} <- Finances.create_bill(params) do
-      Absinthe.Subscription.publish(
-        FinanceWeb.Endpoint,
-        bill,
-        new_bill: "*"
-      )
+  def create_bill(_, %{input: params}, %{context: context}) do
+    case context do
+      %{current_user: %{role: "employee"}} ->
+        with {:ok, bill} <- Finances.create_bill(params) do
+          Absinthe.Subscription.publish(
+            FinanceWeb.Endpoint,
+            bill,
+            new_bill: "*"
+          )
 
-      {:ok, bill}
+          {:ok, bill}
+        end
+
+      _ ->
+        {:error, "unauthorized"}
     end
   end
 

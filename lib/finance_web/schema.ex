@@ -1,6 +1,5 @@
 defmodule FinanceWeb.Schema do
   use Absinthe.Schema
-  alias FinanceWeb.Resolvers
   alias FinanceWeb.Schema.Middleware
 
   import_types(FinanceWeb.Schema.Types.{BillTypes, AuthTypes})

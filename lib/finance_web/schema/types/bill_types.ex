@@ -57,6 +57,7 @@ defmodule FinanceWeb.Schema.Types.BillTypes do
     field :bills, list_of(:bill) do
       arg(:filter, non_null(:bill_filter))
       arg(:order, type: :sort_order, default_value: :asc)
+      middleware(Middleware.Authorize, "employee")
       resolve(&BillsResolver.resolve_get_list_of_bills/3)
     end
   end
